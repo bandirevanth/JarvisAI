@@ -31,24 +31,20 @@ session_service = InMemorySessionService()
 def start_agent_session(session_id, is_audio=False):
     """Starts an agent session"""
 
-    # Create a Session
     session = session_service.create_session(
         app_name=APP_NAME,
         user_id=session_id,
         session_id=session_id,
     )
 
-    # Create a Runner
     runner = Runner(
         app_name=APP_NAME,
         agent=root_agent,
         session_service=session_service,
     )
 
-    # Set response modality
     modality = "AUDIO" if is_audio else "TEXT"
 
-    # Create speech config with voice settings
     speech_config = types.SpeechConfig(
         voice_config=types.VoiceConfig(
             # Puck, Charon, Kore, Fenrir, Aoede, Leda, Orus, and Zephyr
@@ -56,16 +52,13 @@ def start_agent_session(session_id, is_audio=False):
         )
     )
 
-    # Create run config with basic settings
     config = {"response_modalities": [modality], "speech_config": speech_config}
 
-    # Add output_audio_transcription when audio is enabled to get both audio and text
     if is_audio:
         config["output_audio_transcription"] = {}
 
     run_config = RunConfig(**config)
 
-    # Create a LiveRequestQueue for this session
     live_request_queue = LiveRequestQueue()
 
     # Start agent session
@@ -86,7 +79,6 @@ async def agent_to_client_messaging(
             if event is None:
                 continue
 
-            # If the turn complete or interrupted, send it
             if event.turn_complete or event.interrupted:
                 message = {
                     "turn_complete": event.turn_complete,
@@ -96,12 +88,10 @@ async def agent_to_client_messaging(
                 print(f"[AGENT TO CLIENT]: {message}")
                 continue
 
-            # Read the Content and its first Part
             part = event.content and event.content.parts and event.content.parts[0]
             if not part:
                 continue
 
-            # Make sure we have a valid Part
             if not isinstance(part, types.Part):
                 continue
 
@@ -192,16 +182,13 @@ async def websocket_endpoint(
 ):
     """Client websocket endpoint"""
 
-    # Wait for client connection
     await websocket.accept()
     print(f"Client #{session_id} connected, audio mode: {is_audio}")
 
-    # Start agent session
     live_events, live_request_queue = start_agent_session(
         session_id, is_audio == "true"
     )
 
-    # Start tasks
     agent_to_client_task = asyncio.create_task(
         agent_to_client_messaging(websocket, live_events)
     )
@@ -210,5 +197,4 @@ async def websocket_endpoint(
     )
     await asyncio.gather(agent_to_client_task, client_to_agent_task)
 
-    # Disconnected
     print(f"Client #{session_id} disconnected")
