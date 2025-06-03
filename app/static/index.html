@@ -95,7 +95,6 @@
         padding-left: 14px;
       }
       
-      /* Add a small audio icon for messages with audio */
       .audio-icon {
         display: inline-block;
         width: 18px;
@@ -322,7 +321,7 @@
       
       <form id="messageForm">
         <input type="text" id="message" name="message" placeholder="Type your message here..." autocomplete="off" />
-        <button type="submit" id="sendButton" disabled>Send</button>
+        <button type="submit" id="sendButton" disabled>Send!</button>
         <button type="button" id="startAudioButton">Enable Voice</button>
         <button type="button" id="stopAudioButton">Stop Voice</button>
       </form>
@@ -335,7 +334,7 @@
       </div>
       <div class="status-item" id="recording-container" style="display: none;">
         <div class="status-dot recording" style="animation: pulse-recording 1.5s infinite;"></div>
-        <span id="recording-status">Recording</span>
+        <span id="recording-status">Recording...</span>
       </div>
     </div>
   </body>
