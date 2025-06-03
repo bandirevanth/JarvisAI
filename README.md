@@ -1,4 +1,4 @@
-#  Jarvis Voice Assistant AI
+#  Jarvis: AI Assistant
 
 Google Calendar Integration for ADK Voice Assistant
 
