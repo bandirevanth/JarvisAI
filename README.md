@@ -1,6 +1,6 @@
 #  Jarvis: AI Assistant
 
-Google Calendar Integration for ADK Voice Assistant
+**Google Calendar Integration & Automation with Google ADK**
 
 ## Setup Instructions
 
