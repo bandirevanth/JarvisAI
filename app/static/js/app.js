@@ -6,14 +6,12 @@
  * WebSocket handling
  */
 
-// Global variables
 const sessionId = Math.random().toString().substring(10);
 const ws_url = "ws://" + window.location.host + "/ws/" + sessionId;
 let websocket = null;
 let is_audio = false;
 let currentMessageId = null; // Track the current message ID during a conversation turn
 
-// Get DOM elements
 const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("message");
 const messagesDiv = document.getElementById("messages");
@@ -26,30 +24,23 @@ const recordingContainer = document.getElementById("recording-container");
 
 // WebSocket handlers
 function connectWebsocket() {
-  // Connect websocket
   const wsUrl = ws_url + "?is_audio=" + is_audio;
   websocket = new WebSocket(wsUrl);
 
-  // Handle connection open
   websocket.onopen = function () {
-    // Connection opened messages
     console.log("WebSocket connection opened.");
     connectionStatus.textContent = "Connected";
     statusDot.classList.add("connected");
 
-    // Enable the Send button
     document.getElementById("sendButton").disabled = false;
     addSubmitHandler();
   };
 
   // Handle incoming messages
   websocket.onmessage = function (event) {
-    // Parse the incoming message
     const message_from_server = JSON.parse(event.data);
     console.log("[AGENT TO CLIENT] ", message_from_server);
 
-    // Show typing indicator for first message in a response sequence,
-    // but not for turn_complete messages
     if (
       !message_from_server.turn_complete &&
       (message_from_server.mime_type === "text/plain" ||
@@ -58,12 +49,10 @@ function connectWebsocket() {
       typingIndicator.classList.add("visible");
     }
 
-    // Check if the turn is complete
     if (
       message_from_server.turn_complete &&
       message_from_server.turn_complete === true
     ) {
-      // Reset currentMessageId to ensure the next message gets a new element
       currentMessageId = null;
       typingIndicator.classList.remove("visible");
       return;
@@ -90,7 +79,6 @@ function connectWebsocket() {
 
     // Handle text messages
     if (message_from_server.mime_type === "text/plain") {
-      // Hide typing indicator
       typingIndicator.classList.remove("visible");
 
       const role = message_from_server.role || "model";
@@ -99,8 +87,7 @@ function connectWebsocket() {
       if (currentMessageId && role === "model") {
         const existingMessage = document.getElementById(currentMessageId);
         if (existingMessage) {
-          // Append the text without adding extra spaces
-          // Use a span element to maintain proper text flow
+          // Append the text without adding extra spaces & Use a span element to maintain proper text flow
           const textNode = document.createTextNode(message_from_server.data);
           existingMessage.appendChild(textNode);
 
@@ -115,31 +102,25 @@ function connectWebsocket() {
       const messageElem = document.createElement("p");
       messageElem.id = messageId;
 
-      // Set class based on role
       messageElem.className =
         role === "user" ? "user-message" : "agent-message";
 
-      // Add audio icon for model messages if audio is enabled
       if (is_audio && role === "model") {
         const audioIcon = document.createElement("span");
         audioIcon.className = "audio-icon";
         messageElem.appendChild(audioIcon);
       }
 
-      // Add the text content
       messageElem.appendChild(
         document.createTextNode(message_from_server.data)
       );
 
-      // Add the message to the DOM
       messagesDiv.appendChild(messageElem);
 
-      // Remember the ID of this message for subsequent responses in this turn
       if (role === "model") {
         currentMessageId = messageId;
       }
 
-      // Scroll to the bottom
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
   };
@@ -187,7 +168,6 @@ function addSubmitHandler() {
         role: "user",
       });
       console.log("[CLIENT TO AGENT] " + message);
-      // Scroll down to the bottom of the messagesDiv
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
     return false;
@@ -230,12 +210,10 @@ import { startAudioRecorderWorklet } from "./audio-recorder.js";
 
 // Start audio
 function startAudio() {
-  // Start audio output
   startAudioPlayerWorklet().then(([node, ctx]) => {
     audioPlayerNode = node;
     audioPlayerContext = ctx;
   });
-  // Start audio input
   startAudioRecorderWorklet(audioRecorderHandler).then(
     ([node, ctx, stream]) => {
       audioRecorderNode = node;
@@ -279,10 +257,9 @@ startAudioButton.addEventListener("click", () => {
   startAudio();
   is_audio = true;
 
-  // Add class to messages container to enable audio styling
   messagesDiv.classList.add("audio-enabled");
 
-  connectWebsocket(); // reconnect with the audio mode
+  connectWebsocket();
 });
 
 // Stop audio recording when stop button is clicked
@@ -294,22 +271,17 @@ stopAudioButton.addEventListener("click", () => {
   startAudioButton.textContent = "Enable Voice";
   recordingContainer.style.display = "none";
 
-  // Remove audio styling class
   messagesDiv.classList.remove("audio-enabled");
 
-  // Reconnect without audio mode
   is_audio = false;
 
-  // Only reconnect if the connection is still open
   if (websocket && websocket.readyState === WebSocket.OPEN) {
     websocket.close();
-    // The onclose handler will trigger reconnection
   }
 });
 
 // Audio recorder handler
 function audioRecorderHandler(pcmData) {
-  // Only send data if we're still recording
   if (!isRecording) return;
 
   // Send the pcm data as base64
