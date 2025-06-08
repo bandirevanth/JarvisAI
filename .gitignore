@@ -1,5 +1,116 @@
-.env
+# Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+.env/
 .venv/
-*.json
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variable files
+.env
+.env.*
+
+# VSCode settings
 .vscode/
+.idea/
+*.code-workspace
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Test cache
+.cache/
+pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# Pytype
+.pytype/
+
+# Pylint
+pylint-report.txt
+pylint-global.txt
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Cython debug symbols
+cython_debug/
+
+# pip dependency wheels
+*.whl
+
+# Pytest debug logs
+.pytest_cache/
+nosetests.xml
+test-results.xml
+
+# Logs
+*.log
+*.log.*
+
+# Database / local storage
+*.sqlite3
+*.db
+*.db-journal
+*.sql
+*.bak
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Compiled HTML docs
+docs/_build/
+
+# Twilio
+twilio-debug.log
+
+# FastAPI static/temp files
+staticfiles/
+media/
+tmp/
+temp/
+
+# Google Cloud credentials or configs (make sure you use a safer path or vault)
+*.json
+gcloud-key.json
+
+# Token or service files
+*.token
+*.secret
+*.pem
+*.key
+
+# Misc cache
+*.egg-info/
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# URI schemes
+*.url
+*.uritemplate
