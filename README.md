@@ -2,7 +2,7 @@
 
 **Google Calendar Integration & Automation with Google ADK**
 
-## Setup Instructions
+## Detailed Setup Instructions
 
 ### 1. Install Dependencies
 
